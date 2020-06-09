@@ -1,12 +1,12 @@
 
-import {Webp} from "../libwebp/dist/webp.js"
-import {loadBinaryData} from "./load-binary-data.js"
-import {detectWebpSupport} from "./detect-webp-support.js"
-import {WebpMachineOptions, PolyfillDocumentOptions, DetectWebpImage} from "./interfaces.js"
+import { Webp } from "../libwebp/dist/webp.js"
+import { loadBinaryData } from "./load-binary-data.js"
+import { detectWebpSupport } from "./detect-webp-support.js"
+import { WebpMachineOptions, PolyfillDocumentOptions, DetectWebpImage } from "./interfaces.js"
 
 const relax = () => new Promise(resolve => requestAnimationFrame(resolve))
 
-export class WebpMachineError extends Error {}
+export class WebpMachineError extends Error { }
 
 export const defaultDetectWebpImage: DetectWebpImage = (image: HTMLImageElement) =>
 	/\.webp.*$/i.test(image.src)
@@ -21,7 +21,7 @@ export class WebpMachine {
 	private readonly webpSupport: Promise<boolean>
 	private readonly detectWebpImage: DetectWebpImage
 	private busy = false
-	private cache: {[key: string]: string} = {}
+	private cache: { [key: string]: string } = {}
 
 	constructor({
 		webp = new Webp(),
@@ -29,6 +29,7 @@ export class WebpMachine {
 		detectWebpImage = defaultDetectWebpImage
 	}: WebpMachineOptions = {}) {
 		this.webp = webp
+		this.webp.Module.doNotCaptureKeyboard = true;
 		this.webpSupport = webpSupport
 		this.detectWebpImage = detectWebpImage
 	}
@@ -61,7 +62,7 @@ export class WebpMachine {
 	 */
 	async polyfillImage(image: HTMLImageElement): Promise<void> {
 		if (await this.webpSupport) return
-		const {src} = image
+		const { src } = image
 		if (this.detectWebpImage(image)) {
 			if (this.cache[src]) {
 				image.src = this.cache[src]
